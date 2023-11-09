@@ -3,12 +3,14 @@
 simplified mapping of Wemo names to devices.
 External systems provieded with formatted MQTT topics/payload for easy device comminication.
 </p>
-currently tested on Raspbian Linux, should work on any linux/Unix
-Written in Python3 with some SQL.
+currently tested on Raspbian Linux, should work on any linux/Unix<br>
+Written in Python3 with some SQL.<br>
+Designed to be zero user configuration once an img is built. 
 <pre>
 home-broker - a small dedicated mqtt, fauxmo and zigbee server
 it consolodates zigbee and Internet/WiFi devices in a sqlite database.
-It only collects configuration and does not command devices
+It only collects and distributes configuration and does not command devices
+Except when testing via HTTP 
 
 a small http server exists: 
     1) maintain/map fauxmo devices
@@ -20,13 +22,14 @@ a small http server exists:
 
 It serves device information via pub/sub to extract devices from database
 to be used by other automation systems.
-This data is simplfied and provides formatted data including the pub/sub strings 
-
-Hardware. 
-SBC  pretty much anthing that can run Linux with RJ45 
-    and a USB port for the zigbee dongle
-
+This data is simplfied and provides formatted data including the pub/sub strings
 </pre>
+# Hardware requirements 
+SBC  pretty much anthing that can run Linux<br>
+with RJ45 to coonect to the users router<br>
+and a USB port for the zigbee dongle
+
+
 
 # Current development system:
 Raspbian linux<br>
