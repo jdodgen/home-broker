@@ -5,8 +5,6 @@ External systems provieded with formatted MQTT topics/payload for easy device co
 
 currently tested on Raspbian Linux, should work on any linux/Unix
 Written in Python3 with some SQL.
-
-Here is my Install.txt for some doucmentation I will edit as files are added
 ```
 home-broker - a small dedicated mqtt, fauxmo and zigbee server
 it consolodates zigbee and Internet/WiFi devices in a sqlite database.
@@ -36,7 +34,5 @@ https://www.zigbee2mqtt.io/guide/adapters/
 Raspbian linux
 "Le Potato" SBC (because RPI 3's were unavailble).
 "SONOFF Zigbee 3.0 USB Dongle" (compatable and cheap)
-
-
 ```
 
