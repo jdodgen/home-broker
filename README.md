@@ -1,11 +1,11 @@
 # home-broker
-A server that uses fauxmo, mqtt and zigbee2mqtt to consolodate and zigbee as well as custom IP devices.
+<p>A server that uses fauxmo, mqtt and zigbee2mqtt to consolodate and zigbee as well as custom IP devices.
 simplified mapping of Wemo names to devices.
 External systems provieded with formatted MQTT topics/payload for easy device comminication.
-
+</p>
 currently tested on Raspbian Linux, should work on any linux/Unix
 Written in Python3 with some SQL.
-```
+<pre>
 home-broker - a small dedicated mqtt, fauxmo and zigbee server
 it consolodates zigbee and Internet/WiFi devices in a sqlite database.
 It only collects configuration and does not command devices
@@ -25,14 +25,12 @@ This data is simplfied and provides formatted data including the pub/sub strings
 Hardware. 
 SBC  pretty much anthing that can run Linux with RJ45 
     and a USB port for the zigbee dongle
- 
-here are the working dongles
-https://www.zigbee2mqtt.io/guide/adapters/ 
 
+</pre>
 
 # Current development system:
-Raspbian linux
-"Le Potato" SBC (because RPI 3's were unavailble).
-"SONOFF Zigbee 3.0 USB Dongle" (compatable and cheap)
-```
-
+Raspbian linux<br>
+AML-S905X-CC (Le Potato) SBC (because RPI 3's were unavailble).<br>
+"SONOFF Zigbee 3.0 USB Dongle" (compatable and cheap)<br>
+Here are the working dongles<br>
+https://www.zigbee2mqtt.io/guide/adapters/<br> 
