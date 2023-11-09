@@ -16,13 +16,13 @@ a small http server exists:
     1) maintain/map fauxmo devices
     2) provides a link zigbee2mqtt to maintain zigbee devices
     3) allow manual entry of custom IP devices
-    4) collects nome-broker pub/sub devices 
-    5) view consilodated devices and generated topics/payloads
+    4) auto collects home-broker IP devices 
+    5) view consilodated devices and generated pub/sub topics/payloads
     6) it can be used to test devices turn on and off
 
 It serves device information via pub/sub to extract devices from database
-to be used by another automation system. This data is simplfied and 
-formatted data including the pub/sub strings 
+to be used by other automation systems.
+This data is simplfied and provides formatted data including the pub/sub strings 
 
 Hardware. 
 SBC  pretty much anthing that can run Linux with RJ45 
@@ -100,31 +100,34 @@ https://www.zigbee2mqtt.io/guide/installation/01_linux.html
 # change config to use home-broker.local for the broker
 # broker has not been configured yet 
 
-
+copy mosquitto.conf to /etc/mosquitto/conf.d
 
 # now install home-broker code
 sftp down the following (filezilla):
+const.py
+database.py
+devices_to_json.py
+fauxmo_manager.py
+http_server.py
+index_html.py
+json_tools.py
+load_IP_device_data.py
+load_zigbee_data.py
+main.py
+message.py
+mosquitto_manager.py
+mqtt_service_task.py
+mqttplugin.py
+zigbee2mqtt_manager.py
 
 copy mosquitto.conf to /etc/mosquitto/conf.d
 
-zigbee2mqtt_manager.py
-mqtt_service_task.py
-http_server.py
-database.py
-fauxmo_manager.py
-const.py
-message.py
-devices_to_json.py
-load_zigbee_data.py
-load_IP_device_data.py
-main.py
-index_html.py
+# set it up to auto start the home-broker code
+replace /dev/ttyUSB0 with your ZBC port
 
 
-
-# set it up to auto start the home-broker code replace /dev/ttyUSB0 with your ZBC port
 edit  .bashrc 
-add to the end
+add to the end the following 
 
 sudo chmod a+rw /dev/ttyUSB0
 echo booting in 10 seconds
