@@ -1,36 +1,47 @@
 # home-broker
-<p>A server that uses fauxmo, mqtt and zigbee2mqtt to consolodate and zigbee as well as custom IP devices.
-simplified mapping of Wemo names to devices.
-External systems provieded with formatted MQTT topics/payload for easy device comminication.
-</p>
-currently tested on Raspbian Linux, should work on any linux/Unix<br>
-Written in Python3 with some SQL.<br>
-Designed to be zero user configuration once an img is built. 
+A LAN server system desighed to run on low end Linux SBCs<br>
+    
+Features:
+- MQTT
+- WeMo (amazon Alexa)
+- ZigBee Home Automation Devices
+- IP/WiFi MQTT home automation devices
+    
+It uses these open source tools:
+- [fauxmo](https://github.com/n8henrie/fauxmo)
+- [mqtt](https://github.com/eclipse/mosquitto)
+- [zigbee2mqtt](https://github.com/Koenkk/zigbee2mqtt)
+
+It serves the following: 
+- Lightweight HTTP serverer for:
+  - maintain/map fauxmo devices
+  - provides a link zigbee2mqtt to maintain zigbee devices
+  - allow manual entry of custom IP devices
+  - auto collects home-broker IP devices
+  - view consilodated devices and generated pub/sub topics/payloads
+  - it can be used to test devices turn on and off
+- Publish a simplified JSON file of all IP and Zigbee devices
+  - containing MQTT pup/sub and payload strings
+  - Available to feed other Home Automation systems
+- A local MQTT Broker
+- A WeMo to MQTT device mapping
+
+currently developed/tested on Raspbian Linux, should work on any linux/Unix<br>
+Written in Python3 with some SQL<br>
+Designed to require NO user configuration after a img is built. 
 <pre>
+Summary:
 home-broker - a small dedicated mqtt, fauxmo and zigbee server
 it consolodates zigbee and Internet/WiFi devices in a sqlite database.
-It only collects and distributes configuration and does not command devices
-Except when testing via HTTP 
-
-a small http server exists: 
-    1) maintain/map fauxmo devices
-    2) provides a link zigbee2mqtt to maintain zigbee devices
-    3) allow manual entry of custom IP devices
-    4) auto collects home-broker IP devices 
-    5) view consilodated devices and generated pub/sub topics/payloads
-    6) it can be used to test devices turn on and off
-
+It only collects and distributes configuration
 It serves device information via pub/sub to extract devices from database
 to be used by other automation systems.
 This data is simplfied and provides formatted data including the pub/sub strings
 </pre>
 # Hardware requirements 
-SBC  pretty much anthing that can run Linux<br>
-with RJ45 to coonect to the users router<br>
+SBC  pretty much anything that can run Linux<br>
+with RJ45 to connect to the home router<br>
 and a USB port for the zigbee dongle
-
-
-
 # Current development system:
 Raspbian linux<br>
 AML-S905X-CC (Le Potato) SBC (because RPI 3's were unavailble).<br>
