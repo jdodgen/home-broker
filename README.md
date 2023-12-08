@@ -12,7 +12,7 @@ It is best described as a System of Systems, gluing together other open source p
 - [fauxmo](https://github.com/n8henrie/fauxmo)
 - [mqtt](https://github.com/eclipse/mosquitto)
 - [zigbee2mqtt](https://github.com/Koenkk/zigbee2mqtt)
-- And ofcourse tools like Python, sqlite
+- And of course lots of tools like python, sqlite
 
 ### home-broker provides the following services: 
 - Collecting IP/ZigBee devices into a simplified interface
@@ -31,7 +31,7 @@ It is best described as a System of Systems, gluing together other open source p
 
 currently developed/tested on Raspbian Linux, should work on any linux/Unix<br>
 Written in Python3 with some SQL<br>
-Designed to require NO user configuration after a img is built. 
+Designed to require NO user configuration after a SD img is built. 
 ### Summary:
 <pre>
 home-broker - a small dedicated mqtt, fauxmo and zigbee server
@@ -46,8 +46,8 @@ SBC  pretty much anything that can run Linux<br>
 with RJ45 to connect to the home router<br>
 and a USB port for the zigbee dongle
 ## Current development system:
-Raspbian linux<br>
-AML-S905X-CC (Le Potato) SBC (because RPI 3's were unavailble).<br>
-"SONOFF Zigbee 3.0 USB Dongle" (compatable and cheap)<br>
-Here are the working dongles<br>
-https://www.zigbee2mqtt.io/guide/adapters/<br> 
+- Raspbian linux<br>
+- AML-S905X-CC (Le Potato) SBC (because RPI 3's were unavailble)
+- SONOFF Zigbee 3.0 USB Dongle (compatable and cheap)
+- Here are the working dongles
+  - [zigbee2mqtt](https://www.zigbee2mqtt.io/guide/adapters/)
