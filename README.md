@@ -1,5 +1,6 @@
 # home-broker
 A LAN server system desighed to run on low end Linux SBCs<br>
+It is best described as a System of Systems, gluing together other open source projects. 
     
 ### Features:
 - MQTT
@@ -7,12 +8,14 @@ A LAN server system desighed to run on low end Linux SBCs<br>
 - ZigBee Home Automation Devices
 - IP/WiFi MQTT home automation devices
     
-### It uses these open source tools:
+### It uses these other open source projects:
 - [fauxmo](https://github.com/n8henrie/fauxmo)
 - [mqtt](https://github.com/eclipse/mosquitto)
 - [zigbee2mqtt](https://github.com/Koenkk/zigbee2mqtt)
+- And ofcourse tools like Python, sqlite
 
-### It serves the following: 
+### home-broker provides the following services: 
+- Collecting IP/ZigBee devices into a simplified interface
 - Lightweight HTTP serverer for:
   - maintain/map fauxmo devices
   - provides a link zigbee2mqtt to maintain zigbee devices
