@@ -4,7 +4,7 @@ It is best described as a System of Systems, gluing together other open source p
     
 ### Features:
 - MQTT
-- WeMo (amazon Alexa)
+- WeMo (Amazon Alexa)
 - ZigBee Home Automation Devices
 - IP/WiFi MQTT home automation devices
     
