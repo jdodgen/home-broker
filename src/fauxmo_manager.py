@@ -5,10 +5,20 @@ import time
 import const
 import database
 import multiprocessing
+from message import our_ip_address
 import os
-import logging
-logger = None
-
+#
+# conditional print
+import os 
+my_name = os.path.basename(__file__).split(".")[0]
+xprint = print # copy print
+def print(*args, **kwargs): # replace print
+    #return
+    xprint("["+my_name+"]", *args, **kwargs) # the copied real print
+def print_always(*args, **kwargs): # replace print
+    xprint("["+my_name+"]", *args, **kwargs) # the copied real print
+#
+#
 
 head = """
 {
@@ -61,15 +71,14 @@ def build_cfg():
     devices = db.get_fauxmo_devices()
     if len(devices) > 0:
         fauxmo_cfg = head % (const.MQTTPlugin)
-        logger.info("len devices[%s]" % (len(devices),))
+        print("number of fauxmo devices[%s]" % (len(devices),))
         for dev in devices:
             port = dev[0].replace('"','\\"') if type(dev[0]) == str else dev[0]
             name = dev[1].replace('"','\\"')
-            on_topic = dev[2].replace('"','\\"')
+            topic = dev[2].replace('"','\\"')
             on_payload = dev[3].replace('"','\\"')
-            off_topic = dev[4].replace('"','\\"')
-            off_payload = dev[5].replace('"','\\"')
-            fauxmo_cfg = fauxmo_cfg + per_device_minimum % (port, name, on_topic,on_payload, off_topic, off_payload, const.broker, const.broker_mqtt_port)
+            off_payload = dev[4].replace('"','\\"')
+            fauxmo_cfg = fauxmo_cfg + per_device_minimum % (port, name, topic,on_payload, topic, off_payload, our_ip_address(), const.broker_mqtt_port)
             fauxmo_cfg = fauxmo_cfg + use_fake_state  
             fauxmo_cfg = fauxmo_cfg + initial_state
             """
@@ -86,44 +95,46 @@ def build_cfg():
                 fauxmo_cfg = fauxmo_cfg +	retain_cmd % (dev[13],) """
             fauxmo_cfg = fauxmo_cfg[:-1] + end
         fauxmo_cfg = fauxmo_cfg[:-1] + tail
-        logger.info(fauxmo_cfg)
+        print(fauxmo_cfg)
         return fauxmo_cfg
     else:
         return None
-
+    
 def start_fauxmo_task():
+    print_always("creating process")
     p = multiprocessing.Process(target=task)
     p.start()
+    print_always("is_alive =",p.is_alive())
     return p
 
 def stop_fauxmo_task(p):
-    logger = logging.getLogger(__name__)
     p.terminate()
     time.sleep(1)
     while p.is_alive():
-        logger.warning("fauxmo wont die")
+        print("fauxmo wont die")
         time.sleep(0.1)
     p.join()
     p.close()
 
 def task():
-    global logger
-    logger = logging.getLogger(const.log(__file__))
+    print_always("task starting")
     while True:
         if get_fauxmo_cfg() != None:
             try:
-                os.execl("/usr/local/bin/fauxmo", "-c " + const.fauxmo_config_file_path, "-v")
+                os.execl("/usr/local/bin/fauxmo", "-c " + const.fauxmo_config_file_path, "-vv")
+                # for testing  /usr/local/bin/fauxmo -c /etc/fauxmo/config.json   "
             except:
                 pass
             # only returns if it fails
-            logger.warning("fauxmo_manager faxmo exited, waiting and restarting")
+            print("ERROR: faxmo exited, waiting and restarting")
         else:
             pass
-            logger.info("fauxmo_manager nothng to do, waiting and restarting")
+            print("No fauxmo devices")
         time.sleep(const.fauxmo_sleep_seconds)  
 
 def get_fauxmo_cfg():
     fauxmo_cfg = build_cfg()
+    print("config:",fauxmo_cfg)
     if fauxmo_cfg != None:
         # write the config file
         try:
@@ -139,12 +150,12 @@ def get_fauxmo_cfg():
         #     subprocess.run(["/usr/local/bin/fauxmo", "-c", const.config_file_path])
         #     ## never returns
             
-        #     logger.info("fauxmo_manager faxmo exited, waiting and restarting")
+        #     print("fauxmo_manager faxmo exited, waiting and restarting")
         #     time.sleep(10)                   
 
 if __name__ == "__main__":
    
     task()
     time.sleep(1000)
-    #logger.info(build_cfg())
+    #print(build_cfg())
    # task()

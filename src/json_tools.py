@@ -2,12 +2,16 @@ import json
 import const
 import database
 import time
-#import thing
-import logging
-logger = logging.getLogger(__name__)
-
-
-
+#
+# conditional print
+import os 
+my_name = os.path.basename(__file__).split(".")[0]
+xprint = print # copy print
+def print(*args, **kwargs): # replace print
+    return
+    xprint("["+my_name+"]", *args, **kwargs) # the copied real print
+#
+#
 """
 Generic: types like numeric and binary
 Specific: represents a specific capability of a device like a light or switch.
@@ -39,7 +43,7 @@ def j2d_manual_device(j):
     if "on" not in stuff.keys(): stuff["on"] = None
     if "off" not in stuff.keys(): stuff["off"] = None
     if "status" not in stuff.keys(): stuff["status"] = None  
-    logger.info("set[%s] get[%s] on[%s] off[%s] status[%s]" % (stuff["set"], stuff["get"], stuff["on"], stuff["off"], stuff["status"]))
+    print("set[%s] get[%s] on[%s] off[%s] status[%s]" % (stuff["set"], stuff["get"], stuff["on"], stuff["off"], stuff["status"]))
     return stuff
 
 def d2j_manual_device(d):
@@ -63,7 +67,7 @@ def j2d_zigbee_device(name,j):
     if "on" not in stuff.keys(): stuff["on"] = None
     if "off" not in stuff.keys(): stuff["off"] = None
     if "status" not in stuff.keys(): stuff["status"] = None  
-    logger.info("set[%s] get[%s] on[%s] off[%s] status[%s]" % (stuff["set"], stuff["get"], stuff["on"], stuff["off"], stuff["status"]))
+    print("set[%s] get[%s] on[%s] off[%s] status[%s]" % (stuff["set"], stuff["get"], stuff["on"], stuff["off"], stuff["status"]))
     return stuff
 
 if __name__ == "__main__":
@@ -72,6 +76,6 @@ if __name__ == "__main__":
     dict = j2d_manual_device(y)
     dict["foobar"] = "wtf"
     dict["xxxx"] = "xxxwtf"
-    logger.info(dict)  
+    print(dict)  
     j = d2j_manual_device(dict)
-    logger.info(j)
+    print(j)

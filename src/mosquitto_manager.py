@@ -10,19 +10,18 @@ import time
 import const
 from  pgrep import pgrep
 import multiprocessing
-import logging
-logger = None
-
-
-# edit this as needed, 
-cfg = """
-# created by mosquitto_manager.py
-# go there to make changes and reboot
-allow_anonymous true
-listener 1883
-log_dest none
-"""
-
+#
+# conditional print
+import os 
+my_name = os.path.basename(__file__).split(".")[0]
+xprint = print # copy print
+def print(*args, **kwargs): # replace print
+    #return
+    xprint("["+my_name+"]", *args, **kwargs) # the copied real print
+def print_always(*args, **kwargs): # replace print
+    xprint("["+my_name+"]", *args, **kwargs) # the copied real print
+#
+#
 def start_mosquitto_task():
     p = multiprocessing.Process(target=task)
     p.start()
@@ -38,7 +37,7 @@ def is_mosquitto_alive():
 
 def reload_config():
     mos_config = open(const.mosquitto_file_path, "w")
-    n = mos_config.write(cfg)
+    n = mos_config.write(const.mosquitto_configuration)
     mos_config.close()
     pid = is_mosquitto_alive()
     if not pid:
@@ -48,18 +47,18 @@ def reload_config():
     return True
 
 def task():
-    global logger
     # this allows us to control mosquitto
     # If sleeping a reboot was expected to refresh mosquitto
     # if a wake then we are now trying to start and stop mosquitto
     result = reload_config()
-    logger = logging.getLogger(const.log(__file__))
     if not result:
-        logger.warning("reload_config detected mosquitto is not running")
+        print("reload_config detected mosquitto is not running")
     while True:
+        # mosquitto happer when run as a service to this is just here to drop the config
+        # I need a signal or something to get a re-read from mosquitto. for now just need a reboot
         #subprocess.run(["/usr/sbin/mosquitto", "-c", const.mosquitto_file_path,]) # '-v'])
         ## never returns, I hope :)
-        #logger.info("mosquitto exited, waiting and restarting")
+        #print("mosquitto exited, waiting and restarting")
         # future will be 
         time.sleep(const.mosquitto_sleep_seconds)   # asleep as you see Zzzzzzzz
 

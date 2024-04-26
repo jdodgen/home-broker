@@ -1,65 +1,58 @@
 #inside const.py constants and configurable items
-version = 0.1
+version = 0.2
 
 import os
 if os.name =="nt": # testing under Windows
    db_name = 'C:\\Users\jim\devices.db'
    log_path = 'C:\\Users\\jim\\log\\'
    error_log_path = 'C:\\Users\\jim\\log\\error\\'
-   #broker = "home-broker.local"
-   broker = "192.168.0.193"
+   windows_broker = "home-broker.local"
+   #windows_broker = "192.168.0.193"
    mosquitto_file_path = "mosquitto.conf"
    fauxmo_default_dir = "fauxmo"
 else: # running as a system under Linux
    db_name = 'devices.db'
    log_path = "/dev/shm/log/"
    error_log_path = "log/"
-   broker = "home-broker.local"
+   windows_broker = None
    mosquitto_file_path = "/etc/mosquitto/mosquitto.conf"
-   fauxmo_default_dir = "/etc/fauxmo"    
+   fauxmo_default_dir = "/etc/fauxmo"  
+
+ifname = b"eth0"  #our network interface, see "ip a" 
 
 fauxmo_config_file_path = fauxmo_default_dir+"/config.json"
 fauxmo_sleep_seconds = 120 # wake up every two minutes, Zzzzzz
+#
 broker_mqtt_port = 1883
+#
 base_faxmo_port = 56000
 mqtt_keepalive = 120
-mosquitto_sleep_seconds = 1000 # change when checking for death in future versions
+mosquitto_sleep_seconds = 1000 # change when checking for termination in future versions
 MQTTPlugin = "mqttplugin.py"
 zigbe2mqtt = "zigbee2mqtt"
 zigbee_refresh_seconds = 30
 
-http_port = 80
-mqtt_service_q_timeout = 20
+http_port = 80  # home-broker note the z2m package uses port 8080
+mqtt_service_q_timeout = 60*60*4   # seconds every four hours if it times out then zb/ip devices are refreshed and "home/MQTT_devices" is published
 watch_dog_queue_timeout = 20
 db_timeout = 120 # we have nothing that would cause a long lock
-               # but a multiprocessing slowdown may need more time
+#
+zigbee2mqtt_bridge_devices = "zigbee2mqtt/bridge/devices"  # this subscribe gets all the zigbee devices from z2m 
+# 
+home_MQTTdevices_get = "home/MQTTdevices/get"  # topic requests a fresh MQTTDevices 
+#
+home_MQTT_devices = "home/MQTTdevices/configuration"  # Normaized json of ALL devices.  home-broker "publish reatain"s this for other apps it has all the zb and ip devices unified
+#
+# hello_subscribe = "home/+/hello" # tgis is a subscribe to capture IP device configs
+# 
+minor = "minor"  # if so we do not need to refresh our "retain"s
 
-# common to all and needed simple configurtion info
-def log(what, root=False):
-   import logging
-   import logging.config
-   from logging.handlers import RotatingFileHandler
-   import __main__
-   try:
-      os.mkdir(log_path)
-   except:
-      pass
-   try:
-      os.mkdir(error_log_path)
-   except:
-      pass
-   log_file_name = os.path.splitext(os.path.basename(what))[0]
-   # logger.info(">>> passed in cooked name[%s] <<<" % (log_file_name,))
-   fh = logging.handlers.RotatingFileHandler(log_path+log_file_name, maxBytes=4000, backupCount=3)
-   fh.setLevel(logging.INFO)
-   time_format = "%Y-%m-%d %H:%M:%S"
-   fh.setFormatter(logging.Formatter('[%(asctime)s][%(levelname)-5s][%(name)s.%(funcName)s -- %(message)s', datefmt=time_format))
-   er = logging.handlers.RotatingFileHandler(error_log_path+log_file_name, maxBytes=8000, backupCount=2)
-   er.setLevel(logging.WARNING)
-   er.setFormatter(logging.Formatter('[%(asctime)s][%(levelname)-5s][%(name)s.%(funcName)s -- %(message)s', datefmt=time_format))
-   
-   root = logging.getLogger()
-   root.setLevel(min([fh.level,  er.level]))
-   root.addHandler(fh)
-   root.addHandler(er)
-   return log_file_name
+#
+# mosquitto configuration edit this as needed,
+# the file is located at mosquitto_file_path
+mosquitto_configuration = """
+# created by mosquitto_manager.py this is imported in const.py
+# go there to make changes and reboot
+allow_anonymous true
+listener """+str(broker_mqtt_port)+"\nlog_dest none"
+

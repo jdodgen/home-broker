@@ -3,31 +3,44 @@ import message # from home-broker
 import zlib
 import queue
 import json
+#
+# conditional print
+import os 
+my_name = os.path.basename(__file__).split(".")[0]
+xprint = print # copy print
+def print(*args, **kwargs): # replace print
+    #return
+    xprint("["+my_name+"]", *args, **kwargs) # the copied real print
+#
+#
 
 # publish this to CAUSE a refresh of the device data
-get_publish = "home/MQTTdevices/get"
-publish_payload = '{"db": "True"}'
+request_MQTT_Devices = "home/MQTTdevices/get"   # must be == to config version
+publish_payload = "server_test_example"  # payload is used to indicate who did the request
 
-# this will result in a calLback with the device data
-subscribe = "home/MQTT_devices"
+# this will result in a callback with the device data
+subscribed_MQTTDevices = "home/MQTTdevices/configuration"
 
 # sample process fetching all devices with MQTT pub/sub strings
 # as well as other device information
 # is using tools devloped for home-broker
 def task():
     q = queue.Queue()
-    msg = message.message(q) # "callback" as well as other maessages are 
-                            # forwarded via  Queue messages
-    # This just loops sending requests and getting stuff back
-    # when the queue times out it sends the set of pub/sub
+    msg = message.message(q) 
+    # This just loops publishing requests and subscribing for stuff back
+    # when the queue times out it resends the set of pub/sub just for stress tersting
     # It is ued to load test home-broker
+    cnt = 0
     while True:
+        cnt += 1
+        if cnt > 100000:
+            break
         try:
-            item = q.get(timeout=5) 
+            item = q.get(timeout=2) 
         except queue.Empty:
             #imed out so now get devices
-            msg.publish(get_publish, publish_payload)
-            msg.subscribe(subscribe)
+            msg.publish(request_MQTT_Devices, publish_payload)
+            msg.subscribe(subscribed_MQTTDevices)
             continue  
         except:  # not sure anything is left
             continue
@@ -37,12 +50,12 @@ def task():
             topic = item[1]
             payload = item[2]
             print("Item from queue topic[%s] payload[%s]" % (topic, payload,))
-            if topic == subscribe: # reply topic   
+            if topic == subscribed_MQTTDevices: # reply topic   
                 devices(zlib.decompress(payload))
                 pass
         elif command == "connected":
-            msg.publish(get_publish, publish_payload)
-            msg.subscribe(subscribe)
+            msg.publish(request_MQTT_Devices, publish_payload)
+            msg.subscribe(subscribed_MQTTDevices)
 
 # simple device dump
 # # designed to load/update two tables

@@ -1,5 +1,5 @@
 # you may wonder why this is not just a file.
-# the reason is that this loads faster and does not rquire a disk Access
+# the reason is that this loads faster and does not require a slow sd card Access
 # each time HTTP is accessed.
 
 html = '''
@@ -63,6 +63,76 @@ html = '''
         <h3 style="color: red" ;>{{error_message}}</h3>
       </th>
     </tr>
+    {% if do_update_IP %}
+    <tr>
+      <td>
+        <form action="/update_manIP" method="post">
+          <h2>Update Feature</h2>
+          <table class="leftright">
+            <tr>
+              <th>
+                <button type="submit" name=action value="Update/{{man_ip[0]}}">Update</button>
+                <!--&nbsp;<br>
+                <button type="submit" name=action value="Delete/{{man_ip[0]}}">Delete</button>
+                -->
+              </th>
+              <th>
+                <h1>"{{man_ip[1]}}","{{man_ip[2]}}"</h1>
+              </th>
+            </tr>
+            <tr>
+              <th>
+                Feature Type
+              </th>
+              <td>
+                <select name="type">
+                  <option value="{{man_ip[3]}}">{{man_ip[3]}}</option>
+                  <option value="binary">Binary</option>
+                  <option value="numeric">Numeric</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Access
+              </th>
+              <td>
+                <select name="access">
+                  <option value="{{man_ip[7]}}">{{man_ip[7]}}</option>
+                  <option value="sub">sub</option>
+                  <option value="pub">pub</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                MQTT topic
+              </th>
+              <td>
+                <input type="text" size="30" name="topic" value="{{man_ip[4]}}">
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Payload On/other value
+              </th>
+              <td>
+                <input type="text" size="30" name="on" value="{{man_ip[5]}}">
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Payload Off value
+              </th>
+              <td>
+                <input type="text" size="30" name="off" value="{{man_ip[6]}}">
+              </td>
+            </tr>
+          </table>
+        </form>
+      </td>
+    </tr>
+    {% endif %}
     <tr>
       <td>
         <form action="/create_wemo" method="post">
@@ -70,7 +140,8 @@ html = '''
           <table class="leftright">
             <tr>
               <th>
-                <button type="submit" name=action value="create_wemo">Create WeMo</button>
+                <button type="submit" name=action value="create_wemo">Create WeMo</button><br>
+                <button type="submit" name=action value="restart">Restart FauxMo Process</button>
               </th>
               <th>
                 <label for="wemo_name">WeMo Name:</label>
@@ -84,12 +155,13 @@ html = '''
               <th>
                 <select id="wemo_device" name="wemo_device" size="5">
                   {% for b in get_devices_for_wemo %}
-                  <option value="{{b[0]}}">{{b[1]}}&nbsp[{{b[2]}}],&nbsp{{b[3]}}&nbsp[{{b[4]}}] </option>
+                  <option value="{{b[0]}}">
+                 "{{b[1]}}"({{b[2]}})
+                  Property({{b[3]}})Desc[{{b[4]}}]
+                  topic[[{{b[5]}}]
+                  payloads[{{b[6]}}]&nbsp[{{b[7]}}] </option>
                   {% endfor %}
                 </select>
-              </th>
-              <th>
-                <button type="submit" name=action value="restart">Restart FauxMo Process</button>
               </th>
             </tr>
           </table>
@@ -194,97 +266,15 @@ html = '''
         </form>
       </td>
     </tr>
-    {% if do_update_IP %}
-    <tr>
-      <td>
-        <form action="/update_IP" method="post">
-          <table class="leftright">
-            <tr>
-              <th>
-                <button type="submit" name=action value="Update/{{man_ip[0]}}">Update</button><br>
-                &nbsp;<br>
-                <button type="submit" name=action value="Delete/{{man_ip[0]}}">Delete</button>
-              </th>
-              <th>
-                <h1>[{{man_ip[2]}}]&nbsp[{{man_ip[3]}}]</h1>
-              </th>
-            </tr>
-            <tr>
-              <th>
-                Feature Type
-              </th>
-              <td>
-                <select name="type">
-                  <option value="{{man_ip[4]}}">{{man_ip[4]}}</option>
-                  <option value="binary">Binary</option>
-                  <option value="numeric">Numeric</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <th>
-                MQTT set topic
-              </th>
-              <td>
-                <input type="text" size="30" name="set_topic" value="{{man_ip[5]}}">
-              </td>
-            </tr>
-            <tr>
-              <th>
-                Payload On/Numeric value
-              </th>
-              <td>
-                <input type="text" size="30" name="on" value="{{man_ip[6]}}">
-              </td>
-            </tr>
-            <tr>
-              <th>
-                Payload Off value
-              </th>
-              <td>
-                <input type="text" size="30" name="off" value="{{man_ip[7]}}">
-              </td>
-            </tr>
-            <tr>
-              <th>
-                MQTT get topic
-              </th>
-              <td>
-                <input type="text" size="30" name="get_topic" value="{{man_ip[8]}}">
-              </td>
-            </tr>
-            <tr>
-              <th>
-                Empty value
-              </th>
-              <td>
-                <input type="text" size="30" name="empty" value="{{man_ip[9]}}">
-              </td>
-            </tr>
-            <tr>
-              <th>
-                MQTT Subscribe topic
-              </th>
-              <td>
-                <input type="text" size="30" name="pub_topic" value="{{man_ip[10]}}">
-              </td>
-            </tr>
-          </table>
-        </form>
-      </td>
-    </tr>
-    {% endif %}
+    
     </td>
     </tr>
     <tr>
       <td>
         <form action="/all_devices" method="post">
-          <h2>All DEVICES (Manual IP, Auto IP, ZigBee)</h2>
+          <h2>All  Things</h2>
           <table class="center">
             <tr>
-              <th>
-                ieee_address
-              </th>
               <th>
                 Friendly name
               </th>
@@ -295,97 +285,81 @@ html = '''
                 last<br>date
               </th>
               <th>
-                feature<br>property<br>Name
+                Property
               </th>
               <th>
-                feature<br>Description
+                Feature<br>Description
               </th>
               <th>
                 Type
               </th>
               <th>
-                Access<br>Bits
+                Access
               </th>
               <th>
-                Set/publish topic
+                MQTT Topic
               </th>
               <th>
-                Get topic
+                MQTT payload<br>True/other
               </th>
               <th>
-                Subscribe topic
-              </th>
-              <th>
-                True<br>value
-              </th>
-              <th>
-                False<br>value
-              </th>
-              <th>
-                Empty<br>Get value
+                MQTT payload<br>False
               </th>
             </tr>
             <tr>
-              <th colspan="100%"  style="text-align: left;">Manual IP devices</th>
+              <th colspan="100%"  style="text-align: left;">Manual entered IP devices</th>
             </tr>
             {% for d in manIP_devices %}
             <tr>
-              <td align="center">
-                {{d[16]}} 
+              <th align="center">
                 {% if d[1] %}
-                <button type="submit" name=action value="manIP/{{d[0]}}">Modify
-                  values
-                </button>
+                {{d[1]}} 
                 <button type="submit" name=action value="delete/{{d[1]}}">
                     Delete
                 </button>
                 {% endif %}
-              </td>
-              <th>{{d[2]}}</th>
+              </th>
+              <td>{{d[2]}}</td>
               <td>{{d[3]}}</td>
-              <td>{{d[4]}}</td>
+              <th>{{d[4]}}
+                <button type="submit" name=action value="manIP/{{d[0]}}">Modify
+                  values
+                </button>
+              </th>
               <td>{{d[5]}}</td>
               <td>{{d[6]}}</td>
               <td>{{d[7]}}</td>
               <td>{{d[8]}}</td>
-              <td>{{d[9]}}</td>
-              <td>{{d[10]}}</td>
-              <td>{{d[11]}}</td>
-              <td>{{d[12]}}<br>{% if d[15] %} <button type="submit" name=action value="send/1/{{d[0]}}">Send</button>{%
+              <td>{{d[9]}}<br>{% if d[11] %} <button type="submit" name=action value="send/1/{{d[0]}}">Send</button>{%
                 endif %}</td>
-              <td>{{d[13]}}<br>{% if d[15] %} <button type="submit" name=action value="send/0/{{d[0]}}">Send</button>
+              <td>{{d[10]}}<br>{% if d[11] %} <button type="submit" name=action value="send/0/{{d[0]}}">Send</button>
                 {%endif %}</td>
-              <td>{{d[14]}}</td>
             </tr>
             {% endfor %}
             <tr>
-              <th colspan="100%"  style="text-align: left;">Auto IP devices</th>
+              <th colspan="100%"  style="text-align: left;">Auto discovered IP devices</th>
             </tr>
             {% for d in autoIP_devices %}
             <tr>
-              <td>
-                {{d[16]}}
+              <th>
+                {{d[1]}}
                 {% if d[1] %}
                 <button type="submit" name=action value="delete/{{d[1]}}">
                   Delete
                 </button>
                 {% endif %}
-              </td>
-              <th>{{d[2]}}</th>
+              </th>
+              <td>{{d[2]}}</td>
               <td>{{d[3]}}</td>
-              <td>{{d[4]}}</td>
+              <th>{{d[4]}}</th>
               <td>{{d[5]}}</td>
               <td>{{d[6]}}</td>
               <td>{{d[7]}}</td>
               <td>{{d[8]}}</td>
-              <td>{{d[9]}}</td>
-              <td>{{d[10]}}</td>
-              <td>{{d[11]}}</td>
-              <td>{{d[12]}}<br>{% if d[15] %} <button type="submit" name=action value="send/1/{{d[0]}}">Send</button>{%
+              <td>{{d[9]}}<br>{% if d[11] %} <button type="submit" name=action value="send/1/{{d[0]}}">Send</button>{%
                 endif %}</td>
-              <td>{{d[13]}}<br>{% if d[15] %} <button type="submit" name=action value="send/0/{{d[0]}}">Send</button>{%
+              <td>{{d[10]}}<br>{% if d[11] %} <button type="submit" name=action value="send/0/{{d[0]}}">Send</button>{%
                 endif %}</td>
-              <td>{{d[14]}}</td>
             </tr>
             {% endfor %}
             <tr>
@@ -395,22 +369,18 @@ html = '''
             </tr>
             {% for d in zigbee_devices %}
             <tr>
-              <td>{{d[16]}}</td>
-              <th>{{d[2]}}</th>
+              <th>{{d[1]}}</th>
+              <td>{{d[2]}}</td>
               <td>{{d[3]}}</td>
-              <td>{{d[4]}}</td>
+              <th>{{d[4]}}</th>
               <td>{{d[5]}}</td>
               <td>{{d[6]}}</td>
               <td>{{d[7]}}</td>
               <td>{{d[8]}}</td>
-              <td>{{d[9]}}</td>
-              <td>{{d[10]}}</td>
-              <td>{{d[11]}}</td>
-              <td>{{d[12]}}<br>{% if d[15] %} <button type="submit" name=action value="send/1/{{d[0]}}">Send</button>{%
+              <td>{{d[9]}}<br>{% if d[11] %} <button type="submit" name=action value="send/1/{{d[0]}}">Send</button>{%
                 endif %}</td>
-              <td>{{d[13]}}<br>{% if d[15] %} <button type="submit" name=action value="send/0/{{d[0]}}">Send</button>{%
+              <td>{{d[10]}}<br>{% if d[11] %} <button type="submit" name=action value="send/0/{{d[0]}}">Send</button>{%
                 endif %}</td>
-              <td>{{d[14]}}</td>
             </tr>
             {% endfor %}
           </table>

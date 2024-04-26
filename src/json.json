@@ -1,0 +1,266 @@
+[
+    {
+        "definition": null,
+        "disabled": false,
+        "endpoints": {
+            "1": {
+                "bindings": [],
+                "clusters": {
+                    "input": [],
+                    "output": []
+                },
+                "configured_reportings": [],
+                "scenes": []
+            },
+            "10": {
+                "bindings": [],
+                "clusters": {
+                    "input": [],
+                    "output": []
+                },
+                "configured_reportings": [],
+                "scenes": []
+            },
+            "11": {
+                "bindings": [],
+                "clusters": {
+                    "input": [
+                        "ssIasAce",
+                        "genTime"
+                    ],
+                    "output": [
+                        "ssIasZone",
+                        "ssIasWd"
+                    ]
+                },
+                "configured_reportings": [],
+                "scenes": []
+            },
+            "110": {
+                "bindings": [],
+                "clusters": {
+                    "input": [],
+                    "output": []
+                },
+                "configured_reportings": [],
+                "scenes": []
+            },
+            "12": {
+                "bindings": [],
+                "clusters": {
+                    "input": [],
+                    "output": []
+                },
+                "configured_reportings": [],
+                "scenes": []
+            },
+            "13": {
+                "bindings": [],
+                "clusters": {
+                    "input": [
+                        "genOta"
+                    ],
+                    "output": []
+                },
+                "configured_reportings": [],
+                "scenes": []
+            },
+            "2": {
+                "bindings": [],
+                "clusters": {
+                    "input": [],
+                    "output": []
+                },
+                "configured_reportings": [],
+                "scenes": []
+            },
+            "242": {
+                "bindings": [],
+                "clusters": {
+                    "input": [],
+                    "output": []
+                },
+                "configured_reportings": [],
+                "scenes": []
+            },
+            "3": {
+                "bindings": [],
+                "clusters": {
+                    "input": [],
+                    "output": []
+                },
+                "configured_reportings": [],
+                "scenes": []
+            },
+            "4": {
+                "bindings": [],
+                "clusters": {
+                    "input": [],
+                    "output": []
+                },
+                "configured_reportings": [],
+                "scenes": []
+            },
+            "47": {
+                "bindings": [],
+                "clusters": {
+                    "input": [],
+                    "output": []
+                },
+                "configured_reportings": [],
+                "scenes": []
+            },
+            "5": {
+                "bindings": [],
+                "clusters": {
+                    "input": [],
+                    "output": []
+                },
+                "configured_reportings": [],
+                "scenes": []
+            },
+            "6": {
+                "bindings": [],
+                "clusters": {
+                    "input": [],
+                    "output": []
+                },
+                "configured_reportings": [],
+                "scenes": []
+            },
+            "8": {
+                "bindings": [],
+                "clusters": {
+                    "input": [],
+                    "output": []
+                },
+                "configured_reportings": [],
+                "scenes": []
+            }
+        },
+        "friendly_name": "Coordinator",
+        "ieee_address": "0x00124b0024c2aed8",
+        "interview_completed": true,
+        "interviewing": false,
+        "network_address": 0,
+        "supported": true,
+        "type": "Coordinator"
+    },
+    {
+        "date_code": "",
+        "definition": {
+            "description": "SMART+ Smart Plug",
+            "exposes": [
+                {
+                    "features": [
+                        {
+                            "access": 7,
+                            "description": "On/off state of the switch",
+                            "label": "State",
+                            "name": "state",
+                            "property": "state",
+                            "type": "binary",
+                            "value_off": "OFF",
+                            "value_on": "ON",
+                            "value_toggle": "TOGGLE"
+                        }
+                    ],
+                    "type": "switch"
+                },
+                {
+                    "access": 7,
+                    "category": "config",
+                    "description": "Controls the behavior when the device is powered on after power loss. If you get an `UNSUPPORTED_ATTRIBUTE` error, the device does not support it.",
+                    "label": "Power-on behavior",
+                    "name": "power_on_behavior",
+                    "property": "power_on_behavior",
+                    "type": "enum",
+                    "values": [
+                        "off",
+                        "on",
+                        "toggle",
+                        "previous"
+                    ]
+                },
+                {
+                    "access": 1,
+                    "category": "diagnostic",
+                    "description": "Link quality (signal strength)",
+                    "label": "Linkquality",
+                    "name": "linkquality",
+                    "property": "linkquality",
+                    "type": "numeric",
+                    "unit": "lqi",
+                    "value_max": 255,
+                    "value_min": 0
+                }
+            ],
+            "model": "72922-A",
+            "options": [
+                {
+                    "access": 2,
+                    "description":"State actions will also be published as \'action\' when true (default false).",
+                    "label": "State action",
+                    "name": "state_action",
+                    "property": "state_action",
+                    "type": "binary",
+                    "value_off": false,
+                    "value_on": true
+                }
+            ],
+            "supports_ota": true,
+            "vendor": "Sylvania"
+        },
+        "disabled": false,
+        "endpoints": {
+            "1": {
+                "bindings": [
+                    {
+                        "cluster": "genOnOff",
+                        "target": {
+                            "endpoint": 1,
+                            "ieee_address": "0x00124b0024c2aed8",
+                            "type": "endpoint"
+                        }
+                    }
+                ],
+                "clusters": {
+                    "input": [
+                        "genBasic",
+                        "genIdentify",
+                        "genGroups",
+                        "genScenes",
+                        "genOnOff",
+                        "haDiagnostic",
+                        "manuSpecificUbisysDimmerSetup",
+                        "64520"
+                    ],
+                    "output": [
+                        "genIdentify",
+                        "genOta"
+                    ]
+                },
+                "configured_reportings": [
+                    {
+                        "attribute": "onOff",
+                        "cluster": "genOnOff",
+                        "maximum_report_interval": 65000,
+                        "minimum_report_interval": 0,
+                        "reportable_change": 1
+                    }
+                ],
+                "scenes": []
+            }
+        },
+        "friendly_name": "led on desk",
+        "ieee_address": "0xf0d1b80000114ef1",
+        "interview_completed": true,
+        "interviewing": false,
+        "manufacturer": "LEDVANCE",
+        "model_id": "PLUG",
+        "network_address": 44440,
+        "power_source": "Mains (single phase)",
+        "supported": true,
+        "type": "Router"
+    }
+]'

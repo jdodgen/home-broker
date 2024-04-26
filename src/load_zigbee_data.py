@@ -3,19 +3,25 @@ import database
 import json
 import time
 import queue
+import const
+#
+# conditional print
+import os 
+my_name = os.path.basename(__file__).split(".")[0]
+xprint = print # copy print
+def print(*args, **kwargs): # replace print
+    return
+    xprint("["+my_name+"]", *args, **kwargs) # the copied real print
+#
+#
 
-import logging
-logger = logging.getLogger(__name__)
-
-def pt(v):
-    print ("(PT: [%s] %s]" % (v,type(v)))
 class ZigbeeDeviceRefresher():
     def __init__(self):
         self.db = database.database()
-        q = queue.Queue()
-        self.msg = message.message(q)
-        self.topic = "zigbee2mqtt/bridge/devices"
-        self.msg.client.subscribe(self.topic, 0)
+        q = queue.Queue()  
+        self.msg = message.message(q, my_parent=my_name)
+        self.msg.client.subscribe(const.zigbee2mqtt_bridge_devices, 0)
+
         while True:
             try:
                 item = q.get(timeout=20)
@@ -26,40 +32,44 @@ class ZigbeeDeviceRefresher():
             if item is None:
                 print("ZigbeeDeviceRefresher: no reply from ", self.topic)
                 break
-            print("item[0] [%s]" % item[0])
+            print("ZigbeeDeviceRefresher item[0] [%s]" % (item[0],))
             if item[0] == "callback":
-                if item[1] == self.topic: # reply topic
+                if item[1] == const.zigbee2mqtt_bridge_devices: # reply topic
                     load_database_from_zigbee(item[2])
                     break
 
 def load_database_from_zigbee(zigbee2mqtt_devices):
+    #print("\n\n",zigbee2mqtt_devices,"\n\n")
     db = database.database()
-    source = "zigbee"
-    db.clean_devices(source)
+
+    db.delete_all_zb_devices()
     devices =json.loads(zigbee2mqtt_devices)
+    #print("\n\n",devices,"\n\n")
     for d in devices:
-        #logger.info(d.keys())
+        #print(d.keys())
         device_type=d["type"]
         # print("device_type[%s]" % (device_type,))
-        #logger.info("device_type[%s]" % (device_type,))
+        #print("device_type[%s]" % (device_type,))
         if device_type == "Coordinator":
             continue  # ignore for now
-        #logger.info("we care about [%s]" % device_type)
+        #print("we care about [%s]" % device_type)
         definition= d["definition"]
         address=d["ieee_address"]
         name = d["friendly_name"]
-        #logger.info("definition[%s]" % type(definition))
+        if not name:
+            continue
+        #print("definition[%s]" % type(definition))
         if definition == "None":
             continue
-        #logger.info("definition", definition)
+        #print("definition", definition)
         description = definition["description"]   
-        #logger.info("description[%s]  ieee[%s] friendly[%s]" % (description, address, name))
-        rc = db.create_device(description, address, name, source)
+        print("description[%s]  ieee[%s] friendly[%s]" % (description, address, name))
+        rc = db.upsert_device(description, name, "ZB")
         #print("load_database_from_zigbee rc", rc)
         exposes = definition["exposes"]
         
         for e in exposes:
-            #logger.info("exposes:", e) 
+            #print("exposes:", e) 
             if 'features' in e:
                 e = e['features'][0] # not sure why 'features' wraps this, so process as normal
             access = e["access"]
@@ -73,36 +83,58 @@ def load_database_from_zigbee(zigbee2mqtt_devices):
             #  now create the topics
             true_value = None
             false_value = None
-            set_topic = None
-            get_topic = None
-            pub_topic = None
-
-            can_published, can_set, can_get = parse_access_flags(access)
-            if can_set:
-                set_topic = "zigbee2mqtt/%s/set" %  (name)
-            if can_get:
-                get_topic = "zigbee2mqtt/%s/get" %  (name)
-            if can_published:
-                pub_topic = "zigbee2mqtt/%s" % name
+       
             if type == 'binary':
                 true_value = '{"%s": "%s"}' % (property, e["value_on"])
                 false_value = '{"%s": "%s"}' % (property, e["value_off"])
             elif type == 'enum':
                 true_value = '{"%s": "%s"}' % (property, "on")
                 false_value = '{"%s": "%s"}' % (property, "off")
-            empty_value = '{"%s": ""}' % (property)
-                
-            db.update_feature(address, 
-                            property,  
-                            desc,
-                            type,
-                            access,
-                            set_topic,
-			                get_topic,
-			                pub_topic,   
-			                true_value,
-			                false_value,
-                            empty_value)
+            elif type == 'numeric':
+                true_value = '{"%s": "%s"}' % (property, "number")
+                false_value = None
+
+            can_published, can_set, can_get = parse_access_flags(access)
+            print("name[%s] property[%s] access[%s] published[%s] set[%s] get[%s]" % (name, property, access, can_published, can_set, can_get,))
+            if can_set:
+                topic = "zigbee2mqtt/%s/set" %  (name)
+                pubsub = "sub"
+                db.upsert_feature(name, 
+                                property,  
+                                desc,
+                                type,
+                                pubsub,
+                                topic,
+                                true_value,
+                                false_value,
+                                )
+                #print("did set")
+            if can_get:
+                topic = "zigbee2mqtt/%s/get" %  (name)
+                pubsub = "sub"
+                db.upsert_feature(name, 
+                                property,  
+                                desc,
+                                type,
+                                pubsub,
+                                topic,
+                                true_value,
+                                false_value,
+                                )
+                #print("did get")
+            if can_published:
+                topic = "zigbee2mqtt/%s" % name
+                pubsub = "pub"    
+                db.upsert_feature(name, 
+                                property,  
+                                desc,
+                                type,
+                                pubsub,
+                                topic,
+                                true_value,
+                                false_value,
+                                )
+                #print("did publish")
 
 def parse_access_flags(access):
     published = True if (access & 1) else False
@@ -112,4 +144,7 @@ def parse_access_flags(access):
 
 if __name__ == "__main__":
     d=ZigbeeDeviceRefresher()
-    time.sleep(5)
+    time.sleep(10)
+    #import sample_zigbee2mqtt_bridge_devices
+    #load_database_from_zigbee(sample_zigbee2mqtt_bridge_devices.sample_zigbee2mqtt_bridge_devices)
+
