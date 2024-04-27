@@ -22,12 +22,15 @@ def print(*args, **kwargs): # replace print
 
 def our_ip_address():
     if const.windows_broker:
-        return const.windows_broker
-    import fcntl
-    import struct
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("192.168.253.253", 50000))
-    return s.getsockname()[0]
+        ip = const.windows_broker
+    else:
+        import fcntl
+        import struct
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("192.168.253.253", 50000))
+        ip = s.getsockname()[0]
+    print("ip address",ip)
+    return ip
 
     # hostname = socket.gethostname()
     # print("my host name [%s]" % (hostname,))
@@ -36,24 +39,24 @@ def our_ip_address():
     # return ip_address
 
 class message():
-    def __init__(self, q=None, my_parent=None):
+    def __init__(self, queue=None, my_parent=None):
         global parent
         parent = my_parent
         self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
-        self.q = q
+        self.q = queue
         self.unacked_publish = set()
         self.client.user_data_set(self.unacked_publish)
         ip = our_ip_address()
         for x in range(10):
             try:
-                print("message: attempting mqtt connection ")
+                print("attempting mqtt connection ")
                 self.client.connect(ip, keepalive=const.mqtt_keepalive) 
                 break
             except:
-                print("message: MQTT could not connect [%s]" % (ip,))
+                print("MQTT could not connect [%s]" % (ip,))
                 time.sleep(10)
 
-            # the loop will try later
+            # the connect will try later
         #self.client.on_message=self.on_message
         
         self.client.on_message =   self.on_message  # this one uses the queue
@@ -77,14 +80,14 @@ class message():
         """Subscribe to state command on connect (or reconnect)."""
         #print("message: client[%s] connected" % client)
         #when reconnect existing subscribes must be re-subscribed
-        print("on_connect client[%s] reason_code[%s]" % (client, reason_code,))
+        print("on_connect reason_code[%s]" % (reason_code,))
         if self.q != None:
              self.q.put(("connected",None,None))
     
     def on_message(self, client, userdata, message):
         payload_size = sys.getsizeof(message.payload)
-        print("callback client[%s] topic[%s] payload size[%s]" % (client, message.topic, payload_size)) 
-         #print("name[%s] item[%s] value[%s]" % (name, item, value))
+        print("on_message client[%s] topic[%s] payload size[%s]" % (client, message.topic, payload_size)) 
+        # all messages are forwarded via the passed in queue
         self.q.put(("callback", message.topic, message.payload))
 
     def on_publish(self, client, userdata, mid, reason_code, properties):
@@ -116,7 +119,7 @@ class message():
     def publish(self, topic, payload, retain=False):
         ptype=type(payload)
         payload_size = sys.getsizeof(payload)
-        print("message.publish: topic [%s] payload [%s] payload type[%s]" % (topic, payload_size, ptype))
+        print("publish: topic [%s] payload [%s] payload type[%s]" % (topic, payload_size, ptype))
         if ptype is str:
             #print(""message.publish: payload is string")
             rc = self.client.publish(topic, bytes(payload, 'utf-8'), retain=retain)
@@ -135,7 +138,7 @@ class message():
          self.last_subscribe = topic
          self.last_subscribe_time = t
          self.client.subscribe(topic)
-         print("message.subscribe[%s]" % (topic,))
+         print("subscribe[%s]" % (topic,))
          return True
          
     def cook(self, s):
@@ -144,7 +147,7 @@ class message():
 def publish_single(topic, payload, my_parent=None):
     global parent
     parent = my_parent
-    print("publish single: topic[%s] payload[%s] broker[%s]" % 
+    print("publish_single: topic[%s] payload[%s] broker[%s]" % 
           (topic, payload, our_ip_address(),))
     rc = publish.single(topic, payload, hostname=our_ip_address()) 
     print("publish_single returned[%s]" % rc)
@@ -155,14 +158,14 @@ if __name__ == "__main__":
     q = queue.Queue() 
     msg = message(q)
 
-    msg.publish("zigbee2mqtt/demo_wall/set", '{"state": "on"}')
-    msg.publish("zigbee2mqtt/jake/set", '{"state": "on"}')
-    msg.subscribe("zigbee2mqtt/joe/")
-    msg.subscribe("zigbee2mqtt/jake/#")
-    msg.subscribe("zigbee2mqtt/motion/#")
-    msg.subscribe("zigbee2mqtt/demo_wall/#")
-    
+    msg.publish("message_unit_test/demo_wall/set", '{"state": "on"}')
+    msg.publish("message_unit_test/jake/set", '{"state": "on"}')
+    msg.subscribe("message_unit_test/joe/")
+    msg.subscribe("message_unit_test/jake/#")
+    msg.subscribe("message_unit_test/motion/#")
+    msg.subscribe("message_unit_test/demo_wall/#")
+    time.sleep(2) # pretter output
     while True:
         msg = q.get()
-        print(msg)
+        print("message_unit_test: q.get()", msg)
 
