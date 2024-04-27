@@ -12,7 +12,7 @@ my_name = os.path.basename(__file__).split(".")[0]
 parent = None
 xprint = print # copy print
 def print(*args, **kwargs): # replace print
-    return
+    #return
     tag = "["+my_name+"("+parent+")]" if parent else my_name 
     xprint("["+tag+"]", *args, **kwargs) # the copied real print
 #
@@ -67,10 +67,11 @@ class message():
     
     ### def on_publish(self,client,userdata,result):             #create function for callback
     def xon_publish(self, client, userdata, mid, reason_codes, properties):
-        print("message.on_publish: result[%s]" % (mid,))
-        pass
+        print("on_publish: mid[%s]" % (mid,))
+
     def connect_fail_callback(client, userdata):
         pass
+
     def on_connect(self, client, userdata, flags, reason_code, properties):
     # def on_connect(self, client, userdata, flags, rc ):
         """Subscribe to state command on connect (or reconnect)."""
@@ -82,7 +83,7 @@ class message():
     
     def on_message(self, client, userdata, message):
         payload_size = sys.getsizeof(message.payload)
-        print("message.on_message: callback client[%s] topic[%s] payload size[%s]" % (client, message.topic, payload_size)) 
+        print("callback client[%s] topic[%s] payload size[%s]" % (client, message.topic, payload_size)) 
          #print("name[%s] item[%s] value[%s]" % (name, item, value))
         self.q.put(("callback", message.topic, message.payload))
 

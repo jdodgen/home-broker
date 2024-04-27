@@ -134,7 +134,7 @@ class MQTTPlugin(FauxmoPlugin):
         self.initial_state = initial_state
         self.use_fake_state = use_fake_state
 
-        self.client = Client(CallbackAPIVersion.VERSION1, client_id=mqtt_client_id)
+        self.client = Client(CallbackAPIVersion.VERSION2, client_id=mqtt_client_id)
         if mqtt_user or mqtt_pw:
             self.client.username_pw_set(mqtt_user, mqtt_pw)
         self.client.on_connect = self.on_connect
@@ -157,13 +157,13 @@ class MQTTPlugin(FauxmoPlugin):
         client: Client,
         userdata: str,
         mid: int,
-        granted_qos: t.Tuple[int],
+        reason_code_list, properties,
     ) -> None:
         """Set attribute to show that initial subscription is complete."""
         self._subscribed = True
 
     def on_connect(
-        self, client: Client, userdata: str, flags: dict, rc: int
+        self, client: Client, userdata: str, flags: dict, reason_code: int, properties
     ) -> None:
         """Subscribe to state command on connect (or reconnect)."""
         if self.state_cmd is not None:
