@@ -87,7 +87,7 @@ def create_wemo():
                 if (not status):
                     error_msg = "error inserting"
             else:
-                error_msg = 'Both wemo name and device required, port is optional and usualy auto assigned'
+                error_msg = 'Both wemo name and device required, port is optional and usually auto assigned'
     return render(error_msg) 
 
 @app.route("/modify_wemo", methods =["GET", "POST"])
