@@ -42,6 +42,10 @@ def print_always(*args, **kwargs): # replace print
     xprint("["+my_name+"]", *args, **kwargs) # the copied real print
 #
 #
+# because this json is simple and 
+# because I want it to be easy to read
+# formatted it like this making it less work for the http server to display
+#
 
 head = """
 {
