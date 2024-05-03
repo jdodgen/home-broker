@@ -70,6 +70,9 @@ def create_wemo():
             fauxmo_manager.stop_fauxmo_task(fauxmo_task)
             # to keep watchdog happy, let it know about the change
             watch_dog_queue.put(["startfauxmotask", "start"])
+        elif action == "display":
+            cfg = fauxmo_manager.get_fauxmo_cfg()
+            return render_template_string(cfg)
         else:
             if "wemo_name" in request.form and "wemo_device" in request.form:
                 print("create_wemo  form[%s]" % request.form)

@@ -142,6 +142,7 @@ html = '''
               <th>
                 <button type="submit" name=action value="create_wemo">Create WeMo</button><br>
                 <button type="submit" name=action value="restart">Restart FauxMo Process</button>
+                <button type="submit" name=action value="display">Display future FauxMo config</button>
               </th>
               <th>
                 <label for="wemo_name">WeMo Name:</label>
