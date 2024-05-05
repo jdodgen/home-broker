@@ -174,6 +174,7 @@ class database:
 				print(x)
 			new.append(cooked_address)
 			new_all.append(tuple(new))
+		print(new_all)
 		return new_all
 	
 	def get_manIP_device(self, rowid):
