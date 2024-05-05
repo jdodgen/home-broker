@@ -116,6 +116,9 @@ class database:
 		where = ''
 		if source in ("manIP", "IP", "ZB"):
 			where = "where source = '%s'" %  (source,)
+		else:
+			return None
+
 		cur = self.con.cursor()
 		query = """
 		select
@@ -142,7 +145,7 @@ class database:
 		cur.close()
 		return all
 	
-	def cook_devices_features_for_html(self,source='all'):
+	def cook_devices_features_for_html(self, source=None):
 		all = self.get_all_devices_features(source=source)
 		last_friendly_name = ""
 		new_all = []
