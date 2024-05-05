@@ -17,7 +17,6 @@ def print(*args, **kwargs): # replace print
     xprint("["+my_name+"]", *args, **kwargs) # the copied real print
 #
 #
-
 class database:
 	def __init__(self):
 		self.con = sqlite3.connect(const.db_name, timeout=const.db_timeout)

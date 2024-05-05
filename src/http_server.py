@@ -119,14 +119,19 @@ def all_devices():
         print("/all_devices action part 0 [%s]" % parts[0])
         if parts[0] == "send":
             send_mqtt_publish(parts[2], parts[1])
-        elif parts[0] == "refresh":
+        elif parts[0] == "zbrefresh":
+            #message.publish_single(const.zigbee2mqtt_bridge_devices,"")
+            msg="ZigBee devices refreshed not working at moment"
+        elif parts[0] == "iprefresh":
             message.publish_single(const.home_MQTTdevices_get, my_name) 
-            msg="ZigBee devices refreshed"
+            msg="Auto IP devices refreshed"
         elif parts[0] == 'delete':
             db.delete_device(parts[1])
         elif parts[0] == "manIP":
             update_IP = True
             rowid = parts[1]
+        else:
+            msg="unknown request"
     return render(msg, update_ip=update_IP,manIP_rowid=rowid)
 
 @app.route("/update_manIP", methods =["GET", "POST"])
@@ -234,7 +239,7 @@ def task(fauxmo, watch_dog_queue_in):
     global watch_dog_queue
     watch_dog_queue = watch_dog_queue_in
     fauxmo_task = fauxmo
-    os.nice(-1)
+    # os.nice(-1)
     db=database.database()
     print("Starting http server...")
     http_server = WSGIServer(("0.0.0.0", const.http_port), app)

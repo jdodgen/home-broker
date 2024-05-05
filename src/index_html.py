@@ -338,7 +338,8 @@ html = '''
             </tr>
             {% endfor %}
             <tr>
-              <th colspan="100%"  style="text-align: left;">Auto discovered IP devices</th>
+              <th colspan="100%"  style="text-align: left;">Auto discovered IP devices
+              <button type="submit" name=action value="iprefresh"> refresh auto IP devices</th>
             </tr>
             {% for d in autoIP_devices %}
             <tr>
@@ -365,7 +366,7 @@ html = '''
             {% endfor %}
             <tr>
               <th colspan="100%"  style="text-align: left;">ZigBee devices
-                <button type="submit" name=action value="refresh/zigbee}">Refresh ZigBee2MQTT devices</button>
+                <button type="submit" name=action value="zbrefresh">Refresh ZigBee2MQTT devices</button>
               </th>
             </tr>
             {% for d in zigbee_devices %}
