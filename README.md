@@ -43,7 +43,7 @@ This data is simplfied and provides formatted data including the pub/sub strings
 </pre>
 ## Hardware requirements 
 SBC  pretty much anything that can run Linux<br>
-with RJ45 to connect to the home router<br>
+with RJ45 to connect to the home router, it is a server and not designed to be WiFi<br>
 and a USB port for the zigbee dongle
 ## Current development system:
 - Raspbian linux<br>
