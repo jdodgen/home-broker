@@ -3,8 +3,8 @@ A LAN server system desighed to run on low end Linux SBCs<br>
 It is best described as a System of Systems, gluing together other open source projects.    
 Now moved to: [MQTT-home/linux/home-broker](https://github.com/jdodgen/MQTT-home/tree/main/linux/home-broker)   
 ### Features:
-- MQTT
-- WeMo (Amazon Alexa)
+- MQTT - A IBM designed messaging system for devices
+- WeMo - 
 - ZigBee Home Automation Devices
 - IP/WiFi MQTT home automation devices
     
