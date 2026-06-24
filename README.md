@@ -1,6 +1,6 @@
 # AlertAway   
 A lightweight home automation system designed to run on low end Linux Computers
-It it uses MQTT and has timers, triggers, emailer, voice commands (Phillips Hue)
+It it built on MQTT. It is composed of timers" like for a security light, triggers: where one device causes action on another device, emailer: where events cause emails with jpgs, and voice commands through smart speakers)
 It is Edge server system desighed to run on low end Linux SBCs
 It is best described as a System of Systems, gluing together other open source projects 
 Code lives here: [MQTT-home/linux/alertaway](https://github.com/jdodgen/MQTT-home/tree/main/linux/alertaway)
@@ -10,9 +10,9 @@ It has a domain alertaway.com that displays this content.
 ### Features:
 - MQTT - A IBM designed messaging system for devices
 - WeMo emulation- legacy
-- Phillips Hue emulation
+- Phillips Hue emulation (TBD)
 - ZigBee HA Home Automation Devices
-- IP/WiFi MQTT home automation devices
+- IP/WiFi home automation devices
     
 ### It uses these and other open source projects:
 - [fauxmo](https://github.com/n8henrie/fauxmo)
@@ -34,9 +34,10 @@ It has a domain alertaway.com that displays this content.
 - Designed to require NO user configuration after a SD image is built. 
 
 ## Hardware requirements 
-SBC  pretty much anything that can run Linux<br>
-with a RJ45 to connect to the home router, it is a dedicated server and not designed to be using WiFi<br>
+Simple SBC pretty much anything that can run Linux.      
+Must have both a RJ45 to connect to the home router,    
 Also a USB port for the zigbee2mqtt compatable [zigbee dongle](https://www.zigbee2mqtt.io/guide/adapters/)
+
 ## Current development system:
 - Raspbian linux<br>
 - AML-S905X-CC (Le Potato) SBC (because RPI 3's were unavailble)
@@ -72,8 +73,8 @@ Code lives here: [github](https://github.com/jdodgen/MQTT-home/tree/main/linux/a
 - Designed to require NO user configuration after a SD image is built. 
 
 ## Hardware requirements 
-small SBC, pretty much anything that can run Linux<br>
-A RJ45/Ethernet port to connect to the home router, it is a dedicated server and not designed to be using WiFi<br>
+small SBC, pretty much anything that can run Linux.    
+A RJ45/Ethernet port to connect to the home router,        
 Also a USB port for the zigbee2mqtt compatable [zigbee dongle](https://www.zigbee2mqtt.io/guide/adapters/)
 
 ## Current development system:
@@ -87,4 +88,4 @@ The Project was started in 2011. Originaly written in Perl.
 I started it after a friend had some damage from a water leak when they were away.
 At first it used Digi XBee's and later some ZigBee HA devices.
 XBee's are all gone now.  
-</pre>) 
+</pre>
